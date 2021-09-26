@@ -49,6 +49,7 @@ nextState = 1
 # the Neurite will fire
 threshold = 30
 
+time_delays = False
 # Accumulators are used to decide the value to send to the Left and Right motors
 # of the GoPiGo robot
 accumleft = 0
@@ -5153,10 +5154,10 @@ def motorcontrol():
 
     # We turn the wheels according to the motor weight accumulation
     new_speed = abs(accumleft) + abs(accumright)
-    if new_speed > 150:
-        new_speed = 150
-    elif new_speed < 75:
-        new_speed = 75
+    # if new_speed > 150:
+    #     new_speed = 150
+    # elif new_speed < 75:
+    #     new_speed = 75
     if verbosity > 1:
         print("Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed)
 
@@ -5170,35 +5171,44 @@ def motorcontrol():
             # print "Turn Ratio: ", turnratio
             if turnratio <= 0.6:
                 left_rot()
-                time.sleep(0.8)
+                if time_delays:
+                    time.sleep(0.8)
             elif turnratio >= 2:
                 right_rot()
-                time.sleep(0.8)
+                if time_delays:
+                    time.sleep(0.8)
             bwd()
-            time.sleep(0.5)
+            if time_delays:
+                time.sleep(0.5)
         elif accumright <= 0 and accumleft >= 0:
             right_rot()
-            time.sleep(.8)
+            if time_delays:
+                time.sleep(.8)
         elif accumright >= 0 and accumleft <= 0:
             left_rot()
-            time.sleep(.8)
+            if time_delays:
+                time.sleep(.8)
         elif accumright >= 0 and accumleft > 0:
             turnratio = float(accumright) / float(accumleft)
             # print "Turn Ratio: ", turnratio
             if turnratio <= 0.6:
                 left_rot()
-                time.sleep(0.8)
+                if time_delays:
+                    time.sleep(0.8)
             elif turnratio >= 2:
                 right_rot()
-                time.sleep(0.8)
+                if time_delays:
+                    time.sleep(0.8)
             fwd()
-            time.sleep(0.5)
+            if time_delays:
+                time.sleep(0.5)
         else:
             stop()
 
     accumleft = 0
     accumright = 0
-    time.sleep(0.5)
+    if time_delays:
+        time.sleep(0.5)
 
 
 def dendriteAccumulate(dneuron):
@@ -5263,14 +5273,24 @@ if not disembodied:
 
 tfood = 0
 
+import turtle
 
 def main():
     """Here is where you would put in a method to stimulate the neurons
         We stimulate chemosensory neurons constantly unless nose touch
         (sonar) is stimulated and then we fire nose touch neurites.
         """
+    global tfood
+    global dist
+    turtle.goto(0, -50)
+    turtle.circle(50)
+    turtle.home()
 
+    timestep = 0
     while True:
+    #while timestep < 1000:
+        timestep += 1
+        print(f"TIMESTEP: {timestep}")
         if not disembodied:
             # og version only used this
             # dist = get_distance()
@@ -5297,7 +5317,47 @@ def main():
             dendriteAccumulate("OLQVL")
             runconnectome()
         else:
-            if tfood < 2:
+            # each timestep
+            # food is on a time delay
+            # it gives food for 4 timesteps every 40 timesteps.
+            # but what does this do?
+
+
+            """
+            ok.
+            working theory.
+            it can only sense whats in front of it, more or less.
+                the whole "nose is on the head" thing
+            so will it only move forward when we stimulate it?
+            
+            ok update
+            it only moves AFTER it's been stimmed at least once
+            tried it with food for first 10 timesteps but it quickly stopped.
+            but if we give it 15 it lives a full happy life
+            
+            what if the food is always at a location???
+            """
+            # if tfood < 10:
+            #     if verbosity > 0:
+            #         print("FOOD")
+            #     dendriteAccumulate("ADFL")
+            #     dendriteAccumulate("ADFR")
+            #     dendriteAccumulate("ASGR")
+            #     dendriteAccumulate("ASGL")
+            #     dendriteAccumulate("ASIL")
+            #     dendriteAccumulate("ASIR")
+            #     dendriteAccumulate("ASJR")
+            #     dendriteAccumulate("ASJL")
+            #     runconnectome()
+            #     if time_delays:
+            #         time.sleep(0.5)
+            # tfood += 0.5
+            # if (tfood > 200):
+            #     tfood = 0
+            # note: timestep < 15 produced curious results where it kept going back to it's food
+            if turtle.distance(0,0) < 50:
+                #food for 0-10
+                turtle.pencolor("red")
                 if verbosity > 0:
                     print("FOOD")
                 dendriteAccumulate("ADFL")
@@ -5309,10 +5369,16 @@ def main():
                 dendriteAccumulate("ASJR")
                 dendriteAccumulate("ASJL")
                 runconnectome()
-                time.sleep(0.5)
-            tfood += 0.5
-            if (tfood > 20):
-                tfood = 0
+                if time_delays:
+                    time.sleep(0.5)
+            else:
+                turtle.pencolor("blue")
+                # no food sensors, but still run the brain
+                if verbosity > 0:
+                    print("NO FOOD")
+                runconnectome()
+
+
 
 
 def keyboard_interrupt_handler(a, b):
