@@ -10,6 +10,10 @@
 # This version also explicitly lists all left and right muscles, so that during the muscle checks for the motor control function, instead of 
 # iterating through each neuron, we now iterate only through the relevant muscle neurons.
 
+# This logic error took it's place via doing neuron[nextstate] = neuron[thisState] + 2
+# so if there were ever any neurons from this state that were going to influence the next state,
+# this would not get counted because it would reassign it.
+
 import argparse
 
 parser = argparse.ArgumentParser()
@@ -25,7 +29,7 @@ verbosity = parser.parse_args().verbose
 print("Running on Robot: " + str(not disembodied))
 
 if not disembodied:
-    from gopigo import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
+    from gopigo_emul import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
 
 import time
 import copy
@@ -5136,6 +5140,8 @@ def motorcontrol():
             accumleft += postSynaptic[muscle][nextState]  # vs thisState???
 
             # print muscle, "Before", postSynaptic[muscle][thisState], accumleft
+            # og version uses thisState to reset to 0
+            # might be related to bug that would have infinite firing, in fireNeuron
             postSynaptic[muscle][nextState] = 0
             # print muscle, "After", postSynaptic[muscle][thisState], accumleft
 
@@ -5205,6 +5211,8 @@ def fireNeuron(fneuron):
     if fneuron != "MVULVA":
         f = eval(fneuron)
         f()
+        # og version didn't have this
+        # I think they added it b/c otherwise it would just have infinite firing
         # postSynaptic[fneuron][thisState] = 0
         postSynaptic[fneuron][nextState] = 0
 
@@ -5222,7 +5230,12 @@ def runconnectome():
     for ps in postSynaptic:
         if ps[:3] not in muscles and abs(postSynaptic[ps][thisState]) > threshold:
             fireNeuron(ps)
+            # og version resets the entire postsynaptic array at this point
+            # fucking why???
     motorcontrol()
+
+    # swap from previous state to next state
+    # this data structure could use some improvement
     for ps in postSynaptic:
         # if postSynaptic[ps][thisState] != 0:
         #         print ps
@@ -5231,6 +5244,7 @@ def runconnectome():
         # fired neurons keep getting reset to previous weight
         # wtf deepcopy -- So, the concern is that the deepcopy doesnt
         # scale up to larger neural networks??
+        # I guess it wasn't working for them when they did it on the entire array?
         postSynaptic[ps][thisState] = copy.deepcopy(postSynaptic[ps][nextState])
 
         # this deep copy is not in the functioning version currently.
@@ -5259,6 +5273,7 @@ def main():
 
     while True:
         if not disembodied:
+            # og version only used this
             dist = us_dist(15)
         else:
             # use a fixed value if you want to stimulte nose touch
