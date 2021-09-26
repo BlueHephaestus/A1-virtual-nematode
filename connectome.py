@@ -29,7 +29,7 @@ verbosity = parser.parse_args().verbose
 print("Running on Robot: " + str(not disembodied))
 
 if not disembodied:
-    from gopigo_emul import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist, volt
+    from gopigo_emul import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist
 
 import time
 import copy
@@ -5198,7 +5198,7 @@ def motorcontrol():
 
     accumleft = 0
     accumright = 0
-    # time.sleep(0.5)
+    time.sleep(0.5)
 
 
 def dendriteAccumulate(dneuron):
@@ -5260,7 +5260,6 @@ dist = 0
 
 if not disembodied:
     set_speed(120)
-    print("Voltage: ", volt())
 
 tfood = 0
 
@@ -5274,6 +5273,7 @@ def main():
     while True:
         if not disembodied:
             # og version only used this
+            # dist = get_distance()
             dist = us_dist(15)
         else:
             # use a fixed value if you want to stimulte nose touch
