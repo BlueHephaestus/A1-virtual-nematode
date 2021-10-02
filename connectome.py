@@ -5217,6 +5217,7 @@ def dendriteAccumulate(dneuron):
 
 
 def fireNeuron(fneuron):
+    # Could use DP for string -> function sigs rather than repeated Evals if this costs time
     # The threshold has been exceeded and we fire the neurite
     if fneuron != "MVULVA":
         f = eval(fneuron)
@@ -5287,8 +5288,8 @@ def main():
     turtle.home()
 
     timestep = 0
-    while True:
-    #while timestep < 1000:
+    start_time = time.time()
+    while timestep < 5000:
         timestep += 1
         print(f"TIMESTEP: {timestep}")
         if not disembodied:
@@ -5378,6 +5379,8 @@ def main():
                     print("NO FOOD")
                 runconnectome()
 
+    elapsed = time.time() - start_time
+    print(f"TOTAL TIME: {round(elapsed,2)}s")
 
 
 
