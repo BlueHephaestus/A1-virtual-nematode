@@ -36,6 +36,8 @@ import time
 import copy
 import signal
 import sys
+import matplotlib.pyplot as plt
+import numpy as np
 
 # The postSynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
@@ -55,6 +57,9 @@ time_delays = False
 # of the GoPiGo robot
 accumleft = 0
 accumright = 0
+
+
+speeds = []
 
 # Used to remove from Axon firing since muscles cannot fire.
 muscles = ['MVU', 'MVL', 'MDL', 'MVR', 'MDR']
@@ -5155,63 +5160,9 @@ def motorcontrol():
             # postSynaptic[muscle][thisState] = 0
             postSynaptic[muscle][nextState] = 0
 
-    # We turn the wheels according to the motor weight accumulation
-    new_speed = abs(accumleft) + abs(accumright)
-    # if new_speed > 150:
-    #     new_speed = 150
-    # elif new_speed < 75:
-    #     new_speed = 75
-    if verbosity > 1:
-        print("Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed)
-
-    if not disembodied:
-        body.set_speed(new_speed)
-        if accumleft == 0 and accumright == 0:
-            body.stop()
-        elif accumright <= 0 and accumleft < 0:
-            body.set_speed(150)
-            turnratio = float(accumright) / float(accumleft)
-            # print "Turn Ratio: ", turnratio
-            if turnratio <= 0.6:
-                body.left_rot()
-                if time_delays:
-                    time.sleep(0.8)
-            elif turnratio >= 2:
-                body.right_rot()
-                if time_delays:
-                    time.sleep(0.8)
-            body.bwd()
-            if time_delays:
-                time.sleep(0.5)
-        elif accumright <= 0 and accumleft >= 0:
-            body.right_rot()
-            if time_delays:
-                time.sleep(.8)
-        elif accumright >= 0 and accumleft <= 0:
-            body.left_rot()
-            if time_delays:
-                time.sleep(.8)
-        elif accumright >= 0 and accumleft > 0:
-            turnratio = float(accumright) / float(accumleft)
-            # print "Turn Ratio: ", turnratio
-            if turnratio <= 0.6:
-                body.left_rot()
-                if time_delays:
-                    time.sleep(0.8)
-            elif turnratio >= 2:
-                body.right_rot()
-                if time_delays:
-                    time.sleep(0.8)
-            body.fwd()
-            if time_delays:
-                time.sleep(0.5)
-        else:
-            body.stop()
-
+    angle, magnitude = body.move(accumleft, accumright)
     accumleft = 0
     accumright = 0
-    if time_delays:
-        time.sleep(0.5)
 
 
 def dendriteAccumulate(dneuron):
@@ -5291,7 +5242,8 @@ def main():
 
     timestep = 0
     start_time = time.time()
-    while timestep < 5000:
+    timestep_n = 5000
+    while timestep < timestep_n if timestep_n > 0 else True:
         timestep += 1
         #print(f"TIMESTEP: {timestep}")
         if not disembodied:
@@ -5383,6 +5335,9 @@ def main():
 
     elapsed = time.time() - start_time
     print(f"TOTAL TIME: {round(elapsed,2)}s")
+
+    plt.plot(np.arange(timestep_n), speeds)
+    plt.show()
 
 
 
