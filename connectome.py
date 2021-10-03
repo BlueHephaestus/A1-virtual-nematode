@@ -29,7 +29,8 @@ verbosity = parser.parse_args().verbose
 print("Running on Robot: " + str(not disembodied))
 
 if not disembodied:
-    from gopigo_emul import fwd, bwd, left_rot, right_rot, stop, set_speed, us_dist
+    from body import Body
+    body = Body()
 
 import time
 import copy
@@ -5129,9 +5130,11 @@ def createpostSynaptic():
     postSynaptic['VD9'] = [0, 0]
 
 
+# todo make class for brain with these as class variables
 def motorcontrol():
     global accumright
     global accumleft
+    global body
 
     # accumulate left and right muscles and the accumulated values are
     # used to move the left and right motors of the robot
@@ -5162,48 +5165,48 @@ def motorcontrol():
         print("Left: ", accumleft, "Right:", accumright, "Speed: ", new_speed)
 
     if not disembodied:
-        set_speed(new_speed)
+        body.set_speed(new_speed)
         if accumleft == 0 and accumright == 0:
-            stop()
+            body.stop()
         elif accumright <= 0 and accumleft < 0:
-            set_speed(150)
+            body.set_speed(150)
             turnratio = float(accumright) / float(accumleft)
             # print "Turn Ratio: ", turnratio
             if turnratio <= 0.6:
-                left_rot()
+                body.left_rot()
                 if time_delays:
                     time.sleep(0.8)
             elif turnratio >= 2:
-                right_rot()
+                body.right_rot()
                 if time_delays:
                     time.sleep(0.8)
-            bwd()
+            body.bwd()
             if time_delays:
                 time.sleep(0.5)
         elif accumright <= 0 and accumleft >= 0:
-            right_rot()
+            body.right_rot()
             if time_delays:
                 time.sleep(.8)
         elif accumright >= 0 and accumleft <= 0:
-            left_rot()
+            body.left_rot()
             if time_delays:
                 time.sleep(.8)
         elif accumright >= 0 and accumleft > 0:
             turnratio = float(accumright) / float(accumleft)
             # print "Turn Ratio: ", turnratio
             if turnratio <= 0.6:
-                left_rot()
+                body.left_rot()
                 if time_delays:
                     time.sleep(0.8)
             elif turnratio >= 2:
-                right_rot()
+                body.right_rot()
                 if time_delays:
                     time.sleep(0.8)
-            fwd()
+            body.fwd()
             if time_delays:
                 time.sleep(0.5)
         else:
-            stop()
+            body.stop()
 
     accumleft = 0
     accumright = 0
@@ -5270,11 +5273,10 @@ createpostSynaptic()
 dist = 0
 
 if not disembodied:
-    set_speed(120)
+    body.set_speed(120)
 
 tfood = 0
 
-import turtle
 
 def main():
     """Here is where you would put in a method to stimulate the neurons
@@ -5283,9 +5285,9 @@ def main():
         """
     global tfood
     global dist
-    turtle.goto(0, -50)
-    turtle.circle(50)
-    turtle.home()
+    # turtle.goto(0, -50)
+    # turtle.circle(50)
+    # turtle.home()
 
     timestep = 0
     start_time = time.time()
@@ -5295,7 +5297,7 @@ def main():
         if not disembodied:
             # og version only used this
             # dist = get_distance()
-            dist = us_dist(15)
+            dist = body.us_dist(15)
         else:
             # use a fixed value if you want to stimulte nose touch
             # use something like "dist = 27" if you want to stop nose stimulation
@@ -5356,9 +5358,9 @@ def main():
             # if (tfood > 200):
             #     tfood = 0
             # note: timestep < 15 produced curious results where it kept going back to it's food
-            if turtle.distance(0,0) < 50:
+            if body.distance(0,0) < 50:
                 #food for 0-10
-                turtle.pencolor("red")
+                body.pencolor("red")
                 if verbosity > 0:
                     print("FOOD")
                 dendriteAccumulate("ADFL")
@@ -5373,7 +5375,7 @@ def main():
                 if time_delays:
                     time.sleep(0.5)
             else:
-                turtle.pencolor("blue")
+                body.pencolor("blue")
                 # no food sensors, but still run the brain
                 if verbosity > 0:
                     print("NO FOOD")
@@ -5388,7 +5390,7 @@ def keyboard_interrupt_handler(a, b):
     """Use CNTRL-C to stop the program."""
 
     if not disembodied:
-        stop()
+        body.stop()
 
     print("Ctrl+C detected. Program Stopped!")
     for pscheck in postSynaptic:

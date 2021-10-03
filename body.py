@@ -1,40 +1,40 @@
 import turtle
 
-class NematodeBody:
-    def __init__(self, animate=False):
+class Body(turtle.Turtle):
+    def __init__(self, animate=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.animate = animate
-        self.body = turtle.Turtle()
 
         if not self.animate:
-            turtle.tracer(5,0)
+            turtle.tracer(15,0)
+            #turtle.delay(0) # remove delay
+            #self.ht() # hide body
 
-        self.body.delay(0) # remove delay
-        self.body.ht() # hide body
         self.speed = 1
 
     def fwd(self, *args, **kwargs):
         # go fwd by distance, else keep going fwd
         #print("\tFORWARD")
-        self.body.forward(1)
+        self.forward(1)
         pass
 
     def bwd(self, *args, **kwargs):
         # go bwd by distance, else keep going bwd
         #print("\tBACKWARD")
-        self.body.backward(1)
+        self.backward(1)
         pass
 
     def left_rot(self, *args, **kwargs):
         # turn left without changing position
         #print("\tLEFT ROTATE")
-        self.body.left(10)
+        self.left(10)
         pass
         pass
 
     def right_rot(self, *args, **kwargs):
         # turn right without changing position
         #print("\tRIGHT ROTATE")
-        self.body.right(10)
+        self.right(10)
         pass
 
     def stop(self, *args, **kwargs):
