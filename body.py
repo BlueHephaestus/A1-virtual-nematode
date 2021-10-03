@@ -1,4 +1,7 @@
 import turtle
+turtle.speed(0)
+turtle.delay(0)
+turtle.ht()
 
 w = 1000
 h = 1000
@@ -6,35 +9,87 @@ h = 1000
 # Size of cage
 vw = w // 2
 vh = h // 2
+
+# "Actual" drawn size of cage
+cw = vw // 2
+ch = vh // 2
+
 turtle.Screen().setup(w, h)
 
 # Upper bounds for movements on a given timestep
 max_mag = 5  # So we move 1% of full map at most
 #max_angle = 36  # So we move 10% of a full rotation at most
-max_angle = 360 # Since this empirically is very small
+#max_angle = 360 # Since this empirically is very small
+max_angle = 720 # Since this empirically is very small
 
 
 class Body(turtle.Turtle):
     def __init__(self, animate=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.speed(0)
+        self.ht()
 
         # todo add support for this?
         self.animate = animate
 
         # Add cage display to the canvas
-        turtle.getcanvas().create_rectangle(-vw // 2, vh // 2, vw // 2, -vh // 2, width=3, outline="red")
-        turtle.tracer(15, 0)
+        self.canvas = turtle.getcanvas()
+        self.cage = self.canvas.create_rectangle(-cw,ch,cw,-ch, width=3, outline="red")
+        turtle.tracer(1000, 0)
         # self.ht() # hide body
 
         self.speed = 1
 
-    def us_dist(self, *args, **kwargs):
-        # returns the distance measured from the Ultra Sonic sensor,
-        # i.e. range in front of it to the nearest object
-        # takes the PIN as argument, ofc we don't need that
-        # returns distance (in cm) of the object
-        return -1
-        pass
+    def cagecolor(self, color):
+        self.canvas.itemconfig(self.cage, outline=color)
+
+    def nose_touching(self):
+        """
+        Determine if its nose is touching a wall, and return True/False depending.
+        In order for this to be the case, it has to be:
+            1. Within 5 units of a wall
+            2. "Facing" a wall, meaning more than 45 degrees of it's heading is
+                towards a wall, such that if it were to move forward it would
+                be moving towards the wall.
+
+        :return: True/False on if nose touch sensors should be triggered.
+        """
+        wall_buffer = 50
+
+        # Set to 360 to disable heading checking entirely
+        #heading_buffer = 45
+        heading_buffer = 360
+
+        # For my own convenience I set x1,y1 to bot-left corner and x2,y2 to top-right
+        x1,y1,x2,y2 = -cw,-ch,cw,ch
+        pos_x, pos_y = self.pos()
+        heading = self.heading()
+        dist_2d = lambda x1,x2: abs(x1-x2)
+
+        # Check each wall's case
+
+        # right wall, 315deg - 45deg centered on 0deg or 360deg
+        # have to compare both 0 and 360 since circles
+        if dist_2d(pos_x,x2) < wall_buffer and dist_2d(heading, 0) < heading_buffer and dist_2d(heading, 360) < heading_buffer:
+            return True
+
+        # top wall, 45deg - 135deg centered on 90deg
+        if dist_2d(pos_y, y2) < wall_buffer and dist_2d(heading, 90) < heading_buffer:
+            return True
+
+        # left wall, 135deg - 225deg centered on 180deg
+        if dist_2d(pos_x, x1) < wall_buffer and dist_2d(heading, 180) < heading_buffer:
+            return True
+
+        # bottom wall, 225deg - 315deg centered on 270deg
+        if dist_2d(pos_y, y1) < wall_buffer and dist_2d(heading, 270) < heading_buffer:
+            return True
+
+        # Otherwise, nope!
+        return False
+
+
+
 
     def exit(self):
         if not self.animate:
@@ -98,5 +153,23 @@ class Body(turtle.Turtle):
             self.forward(mag)
         else:
             self.backward(-mag)
+
+        # Keep it bounded to box, enforce by resetting position to boundaries
+        # For my own convenience I set x1,y1 to bot-left corner and x2,y2 to top-right
+        x1,y1,x2,y2 = -cw,-ch,cw,ch
+        pos_x, pos_y = self.pos()
+
+        if pos_x < x1:
+            pos_x = x1
+        elif pos_x > x2:
+            pos_x = x2
+
+        if pos_y < y1:
+            pos_y = y1
+        elif pos_y > y2:
+            pos_y = y2
+
+        # If not outside the box, no change, if outside the box, reset to the box bounds
+        self.setpos(pos_x,pos_y)
 
         return angle, mag

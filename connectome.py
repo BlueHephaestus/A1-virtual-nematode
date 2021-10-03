@@ -15,6 +15,7 @@
 # this would not get counted because it would reassign it.
 
 import argparse
+import turtle
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--disembodied', help='Run without sensor data', action='store_true')
@@ -84,14 +85,16 @@ mRight = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14'
           'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19',
           'MVR20', 'MVL21', 'MVR22', 'MVR23']
 # Used to accumulate muscle weighted values in body muscles 07-23 = worm locomotion
+
+# todo: Why are MDL21 and MVL21 in the right sections?
 musDleft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15',
             'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23']
 musVleft = ['MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15',
             'MVL16', 'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23']
 musDright = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15',
-             'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23']
+             'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23'] # MDL???
 musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15',
-             'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVL21', 'MVR22', 'MVR23']
+             'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVL21', 'MVR22', 'MVR23'] # MVL???
 
 """This is the full C Elegans Connectome as expresed in the form of the Presynatptic
 neurite and the postSynaptic neurites.
@@ -5228,6 +5231,28 @@ createpostSynaptic()
 dist = 0
 tfood = 0
 
+def trigger_food_sensors():
+    dendriteAccumulate("ADFL")
+    dendriteAccumulate("ADFR")
+    dendriteAccumulate("ASGR")
+    dendriteAccumulate("ASGL")
+    dendriteAccumulate("ASIL")
+    dendriteAccumulate("ASIR")
+    dendriteAccumulate("ASJR")
+    dendriteAccumulate("ASJL")
+
+def trigger_nose_touch_sensors():
+    dendriteAccumulate("FLPR")
+    dendriteAccumulate("FLPL")
+    dendriteAccumulate("ASHL")
+    dendriteAccumulate("ASHR")
+    dendriteAccumulate("IL1VL")
+    dendriteAccumulate("IL1VR")
+    dendriteAccumulate("OLQDL")
+    dendriteAccumulate("OLQDR")
+    dendriteAccumulate("OLQVR")
+    dendriteAccumulate("OLQVL")
+
 
 def main():
     """Here is where you would put in a method to stimulate the neurons
@@ -5238,100 +5263,46 @@ def main():
     global dist
     global angles
     global mags
+    import turtle
     # turtle.goto(0, -50)
     # turtle.circle(50)
     # turtle.home()
 
     start_time = time.time()
-    timestep_n = 5000
+    timestep_n = 5000000000000000000
+    food_x = -100
+    food_y = -100
     #while timestep < timestep_n if timestep_n > 0 else True:
     for timestep in tqdm(range(timestep_n)):
         #print(f"TIMESTEP: {timestep}")
-        if not disembodied:
-            # og version only used this
-            # dist = get_distance()
-            dist = body.us_dist(15)
-        else:
-            # use a fixed value if you want to stimulte nose touch
-            # use something like "dist = 27" if you want to stop nose stimulation
-            dist = 27
+        if timestep % 10000 == 0:
+            body.clear()
 
-        # Do we need to switch states at the end of each loop? No, this is done inside the runconnectome()
-        # function, called inside each loop.
-        if dist > 0 and dist < 30:
-            if verbosity > 0:
-                print("OBSTACLE (Nose Touch)", dist)
-            dendriteAccumulate("FLPR")
-            dendriteAccumulate("FLPL")
-            dendriteAccumulate("ASHL")
-            dendriteAccumulate("ASHR")
-            dendriteAccumulate("IL1VL")
-            dendriteAccumulate("IL1VR")
-            dendriteAccumulate("OLQDL")
-            dendriteAccumulate("OLQDR")
-            dendriteAccumulate("OLQVR")
-            dendriteAccumulate("OLQVL")
+        if timestep == 10000:
+            # move the food
+            food_x = -100
+            food_y = -100
+
+        # Check if it is bumping into the wall, and if so, trigger nose touch
+        if body.nose_touching():
+            body.cagecolor("black")
+            body.pencolor("black")
+            trigger_nose_touch_sensors()
             runconnectome()
         else:
-            # each timestep
-            # food is on a time delay
-            # it gives food for 4 timesteps every 40 timesteps.
-            # but what does this do?
-
-
-            """
-            ok.
-            working theory.
-            it can only sense whats in front of it, more or less.
-                the whole "nose is on the head" thing
-            so will it only move forward when we stimulate it?
-            
-            ok update
-            it only moves AFTER it's been stimmed at least once
-            tried it with food for first 10 timesteps but it quickly stopped.
-            but if we give it 15 it lives a full happy life
-            
-            what if the food is always at a location???
-            """
-            # if tfood < 10:
-            #     if verbosity > 0:
-            #         print("FOOD")
-            #     dendriteAccumulate("ADFL")
-            #     dendriteAccumulate("ADFR")
-            #     dendriteAccumulate("ASGR")
-            #     dendriteAccumulate("ASGL")
-            #     dendriteAccumulate("ASIL")
-            #     dendriteAccumulate("ASIR")
-            #     dendriteAccumulate("ASJR")
-            #     dendriteAccumulate("ASJL")
-            #     runconnectome()
-            #     if time_delays:
-            #         time.sleep(0.5)
-            # tfood += 0.5
-            # if (tfood > 200):
-            #     tfood = 0
-            # note: timestep < 15 produced curious results where it kept going back to it's food
-            if body.distance(0,0) < 50:
-                #food for 0-10
+            # Otherwise do nothing, unless we encounter food
+            # todo we need to handle case where its on the wall and there's food
+            if timestep < 50 or body.distance(food_x,food_y) < 50:
+                body.cagecolor("red")
                 body.pencolor("red")
-                if verbosity > 0:
-                    print("FOOD")
-                dendriteAccumulate("ADFL")
-                dendriteAccumulate("ADFR")
-                dendriteAccumulate("ASGR")
-                dendriteAccumulate("ASGL")
-                dendriteAccumulate("ASIL")
-                dendriteAccumulate("ASIR")
-                dendriteAccumulate("ASJR")
-                dendriteAccumulate("ASJL")
+                trigger_food_sensors()
                 runconnectome()
                 if time_delays:
                     time.sleep(0.5)
             else:
+                body.cagecolor("blue")
                 body.pencolor("blue")
                 # no food sensors, but still run the brain
-                if verbosity > 0:
-                    print("NO FOOD")
                 runconnectome()
 
     elapsed = time.time() - start_time
