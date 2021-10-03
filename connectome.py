@@ -38,6 +38,7 @@ import signal
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+from tqdm import tqdm
 
 # The postSynaptic dictionary contains the accumulated weighted values as the
 # connectome is executed
@@ -59,7 +60,8 @@ accumleft = 0
 accumright = 0
 
 
-speeds = []
+angles = []
+mags = []
 
 # Used to remove from Axon firing since muscles cannot fire.
 muscles = ['MVU', 'MVL', 'MDL', 'MVR', 'MDR']
@@ -5160,9 +5162,11 @@ def motorcontrol():
             # postSynaptic[muscle][thisState] = 0
             postSynaptic[muscle][nextState] = 0
 
-    angle, magnitude = body.move(accumleft, accumright)
+    angle, mag = body.move(accumleft, accumright)
     accumleft = 0
     accumright = 0
+    angles.append(angle)
+    mags.append(mag)
 
 
 def dendriteAccumulate(dneuron):
@@ -5222,10 +5226,6 @@ def runconnectome():
 createpostSynaptic()
 
 dist = 0
-
-if not disembodied:
-    body.set_speed(120)
-
 tfood = 0
 
 
@@ -5236,15 +5236,16 @@ def main():
         """
     global tfood
     global dist
+    global angles
+    global mags
     # turtle.goto(0, -50)
     # turtle.circle(50)
     # turtle.home()
 
-    timestep = 0
     start_time = time.time()
     timestep_n = 5000
-    while timestep < timestep_n if timestep_n > 0 else True:
-        timestep += 1
+    #while timestep < timestep_n if timestep_n > 0 else True:
+    for timestep in tqdm(range(timestep_n)):
         #print(f"TIMESTEP: {timestep}")
         if not disembodied:
             # og version only used this
@@ -5336,8 +5337,9 @@ def main():
     elapsed = time.time() - start_time
     print(f"TOTAL TIME: {round(elapsed,2)}s")
 
-    plt.plot(np.arange(timestep_n), speeds)
-    plt.show()
+    #plt.plot(np.arange(timestep_n), angles)
+    #plt.plot(np.arange(timestep_n), mags)
+    #plt.show()
 
 
 
@@ -5345,7 +5347,7 @@ def keyboard_interrupt_handler(a, b):
     """Use CNTRL-C to stop the program."""
 
     if not disembodied:
-        body.stop()
+        body.exit()
 
     print("Ctrl+C detected. Program Stopped!")
     for pscheck in postSynaptic:
