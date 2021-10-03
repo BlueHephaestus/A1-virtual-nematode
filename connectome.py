@@ -5293,7 +5293,7 @@ def main():
     start_time = time.time()
     while timestep < 5000:
         timestep += 1
-        print(f"TIMESTEP: {timestep}")
+        #print(f"TIMESTEP: {timestep}")
         if not disembodied:
             # og version only used this
             # dist = get_distance()

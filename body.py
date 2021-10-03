@@ -1,14 +1,22 @@
 import turtle
+w = 1000
+h = 1000
+vw = w//4
+vh = h//4
+turtle.Screen().setup(w,h)
 
 class Body(turtle.Turtle):
     def __init__(self, animate=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # todo add support for this?
         self.animate = animate
 
-        if not self.animate:
-            turtle.tracer(15,0)
-            #turtle.delay(0) # remove delay
-            #self.ht() # hide body
+        #turtle.addshape("cage", ((-vw,vh), (vw, vh), (vw, -vh), (-vw, -vh)))
+        #turtle.shape("cage")
+        turtle.getcanvas().create_rectangle(-vw,vh,vw,-vh, width=3, outline="red")
+        turtle.tracer(15,0)
+        #self.ht() # hide body
 
         self.speed = 1
 
@@ -28,7 +36,6 @@ class Body(turtle.Turtle):
         # turn left without changing position
         #print("\tLEFT ROTATE")
         self.left(10)
-        pass
         pass
 
     def right_rot(self, *args, **kwargs):
