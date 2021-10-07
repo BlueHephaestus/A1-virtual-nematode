@@ -17,12 +17,20 @@ ch = vh // 2
 
 turtle.Screen().setup(w, h)
 
+tracer_interval = 100
 # Upper bounds for movements on a given timestep
-max_mag = 5  # So we move 1% of full map at most
+# set to 512 to disable normalization
+max_mag = 5
 #max_angle = 36  # So we move 10% of a full rotation at most
-#max_angle = 360 # Since this empirically is very small
 #max_angle = 720 # Since this empirically is very small
-max_angle = 100 # Since this empirically is very small
+max_angle = 512
+#max_angle = 720 # Since this empirically is very small
+
+wall_buffer = 5
+
+# Set to 360 to disable heading checking entirely
+#heading_buffer = 90
+heading_buffer = 360
 
 
 class Body(turtle.Turtle):
@@ -36,13 +44,18 @@ class Body(turtle.Turtle):
 
         # Add cage display to the canvas
         self.canvas = turtle.getcanvas()
+        self.sense_cage = True
+        self.enforce_cage = True
         self.cage = self.canvas.create_rectangle(-cw,ch,cw,-ch, width=3, outline="red")
-        turtle.tracer(0, 0)
-        # self.ht() # hide body
 
-        #self.speed = 1
+        self.left_trim = .56474 #Determined by running for 100k timesteps and getting average difference between left and right power
+        self.right_trim = 0
+
         self.lefts = []
         self.rights = []
+
+        turtle.tracer(tracer_interval, 0)
+        # self.ht() # hide body
 
     def cagecolor(self, color):
         self.canvas.itemconfig(self.cage, outline=color)
@@ -58,11 +71,8 @@ class Body(turtle.Turtle):
 
         :return: True/False on if nose touch sensors should be triggered.
         """
-        wall_buffer = 50
 
-        # Set to 360 to disable heading checking entirely
-        #heading_buffer = 45
-        heading_buffer = 360
+        if not self.sense_cage: return False
 
         # For my own convenience I set x1,y1 to bot-left corner and x2,y2 to top-right
         x1,y1,x2,y2 = -cw,-ch,cw,ch
@@ -98,7 +108,7 @@ class Body(turtle.Turtle):
     def exit(self):
         if not self.animate:
             turtle.update()
-            time.sleep(2)
+            time.sleep(3)
 
     def normalize(self, angle, mag):
         """
@@ -140,8 +150,13 @@ class Body(turtle.Turtle):
             (normalized for our maximum allowed angle and magnitude)
         """
 
-        self.lefts.append(left)
-        self.rights.append(right)
+        #self.lefts.append(left)
+        #self.rights.append(right)
+
+        # Add Trims
+        left += self.left_trim
+        right += self.right_trim
+
         # Get raw angles and normalize
         angle = max(left, right) - min(left, right)
         mag = left + right
@@ -161,22 +176,23 @@ class Body(turtle.Turtle):
         else:
             self.backward(-mag)
 
-        # Keep it bounded to box, enforce by resetting position to boundaries
-        # For my own convenience I set x1,y1 to bot-left corner and x2,y2 to top-right
-        x1,y1,x2,y2 = -cw,-ch,cw,ch
-        pos_x, pos_y = self.pos()
+        if self.enforce_cage:
+            # Keep it bounded to box, enforce by resetting position to boundaries
+            # For my own convenience I set x1,y1 to bot-left corner and x2,y2 to top-right
+            x1,y1,x2,y2 = -cw,-ch,cw,ch
+            pos_x, pos_y = self.pos()
 
-        if pos_x < x1:
-            pos_x = x1
-        elif pos_x > x2:
-            pos_x = x2
+            if pos_x < x1:
+                pos_x = x1
+            elif pos_x > x2:
+                pos_x = x2
 
-        if pos_y < y1:
-            pos_y = y1
-        elif pos_y > y2:
-            pos_y = y2
+            if pos_y < y1:
+                pos_y = y1
+            elif pos_y > y2:
+                pos_y = y2
 
-        # If not outside the box, no change, if outside the box, reset to the box bounds
-        self.setpos(pos_x,pos_y)
+            # If not outside the box, no change, if outside the box, reset to the box bounds
+            self.setpos(pos_x,pos_y)
 
         return angle, mag

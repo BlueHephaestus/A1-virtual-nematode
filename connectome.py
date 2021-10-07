@@ -67,23 +67,28 @@ mags = []
 # Used to remove from Axon firing since muscles cannot fire.
 muscles = ['MVU', 'MVL', 'MDL', 'MVR', 'MDR']
 
-muscleList = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15',
-              'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL07',
-              'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16',
-              'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23', 'MDR07', 'MDR08',
-              'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17',
-              'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR07', 'MVR08', 'MVR09',
-              'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18',
-              'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23']
+muscleList = ['MDL01', 'MDL02', 'MDL03', 'MDL04', 'MDL05', 'MDL06', 'MDL07', 'MDL08', 'MDL09', 'MDL10',
+              'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20',
+              'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL01', 'MVL02', 'MVL03', 'MVL04', 'MVL05', 'MVL06',
+              'MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16',
+              'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23', 'MDR01', 'MDR02', 'MDR03',
+              'MDR04', 'MDR05', 'MDR06', 'MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13',
+              'MDR14', 'MDR15', 'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23',
+              'MDR24', 'MVR01', 'MVR02', 'MVR03', 'MVR04', 'MVR05', 'MVR06', 'MVR07', 'MVR08', 'MVR09',
+              'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19',
+              'MVR20', 'MVR21', 'MVR22', 'MVR23']
 
-mLeft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16',
-         'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL07', 'MVL08', 'MVL09',
-         'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16', 'MVL17', 'MVL18', 'MVL19',
-         'MVL20', 'MVL21', 'MVL22', 'MVL23']
-mRight = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16',
-          'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR07', 'MVR08', 'MVR09',
-          'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19',
-          'MVR20', 'MVR21', 'MVR22', 'MVR23']
+mLeft =  ['MDL01', 'MDL02', 'MDL03', 'MDL04', 'MDL05', 'MDL06', 'MDL07', 'MDL08', 'MDL09', 'MDL10',
+          'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20',
+          'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL01', 'MVL02', 'MVL03', 'MVL04', 'MVL05', 'MVL06',
+          'MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16',
+          'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23']
+
+mRight = ['MDR01', 'MDR02', 'MDR03', 'MDR04', 'MDR05', 'MDR06', 'MDR07', 'MDR08', 'MDR09', 'MDR10',
+          'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20',
+          'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR01', 'MVR02', 'MVR03', 'MVR04', 'MVR05', 'MVR06',
+          'MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16',
+          'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23']
 # Used to accumulate muscle weighted values in body muscles 07-23 = worm locomotion
 
 # todo: Why are MDL21 and MVL21 in the right sections?
@@ -3205,8 +3210,8 @@ def RID():
     postSynaptic['DD1'][nextState] += 4
     postSynaptic['DD2'][nextState] += 4
     postSynaptic['DD3'][nextState] += 3
-    postSynaptic['MDL14'][nextState] += -2
-    postSynaptic['MDL21'][nextState] += -3
+    #postSynaptic['MDL14'][nextState] += -2
+    #postSynaptic['MDL21'][nextState] += -3
     postSynaptic['PDB'][nextState] += 2
     postSynaptic['VD13'][nextState] += 1
     postSynaptic['VD5'][nextState] += 1
@@ -5269,21 +5274,18 @@ def main():
     # turtle.home()
 
     start_time = time.time()
-    #timestep_n = 5000000000000000000
-    timestep_n = 10000
-    food_x = 100
+    timestep_n = 5000000000000000000
+    #timestep_n = 100000
+    food_x = 200
     food_y = 0
+    food_r = 50
     #while timestep < timestep_n if timestep_n > 0 else True:
     for timestep in tqdm(range(timestep_n)):
         #print(f"TIMESTEP: {timestep}")
-        if timestep % 10000 == 0:
-            #body.clear()
-            pass
+        #if timestep % 6000 == 0:
+        #body.clear()
+        #turtle.update()
 
-        if timestep == 10000:
-            # move the food
-            food_x = 100
-            food_y = 0
 
         # Check if it is bumping into the wall, and if so, trigger nose touch
         if body.nose_touching():
@@ -5294,7 +5296,7 @@ def main():
         else:
             # Otherwise do nothing, unless we encounter food
             # todo we need to handle case where its on the wall and there's food
-            if timestep < 50 or body.distance(food_x,food_y) < 50:
+            if timestep < 15 or body.distance(food_x,food_y) < food_r:
                 body.cagecolor("red")
                 body.pencolor("red")
                 trigger_food_sensors()
@@ -5313,6 +5315,7 @@ def main():
 
     print(np.mean(body.lefts))
     print(np.mean(body.rights))
+    print(np.mean(body.rights)-np.mean(body.lefts))
     #plt.scatter(np.arange(timestep_n), body.lefts)
     #plt.scatter(np.arange(timestep_n), body.rights)
     #plt.show()
