@@ -1,3 +1,4 @@
+import time
 import turtle
 turtle.speed(0)
 turtle.delay(0)
@@ -36,10 +37,12 @@ class Body(turtle.Turtle):
         # Add cage display to the canvas
         self.canvas = turtle.getcanvas()
         self.cage = self.canvas.create_rectangle(-cw,ch,cw,-ch, width=3, outline="red")
-        turtle.tracer(150, 0)
+        turtle.tracer(0, 0)
         # self.ht() # hide body
 
-        self.speed = 1
+        #self.speed = 1
+        self.lefts = []
+        self.rights = []
 
     def cagecolor(self, color):
         self.canvas.itemconfig(self.cage, outline=color)
@@ -95,6 +98,7 @@ class Body(turtle.Turtle):
     def exit(self):
         if not self.animate:
             turtle.update()
+            time.sleep(2)
 
     def normalize(self, angle, mag):
         """
@@ -136,6 +140,8 @@ class Body(turtle.Turtle):
             (normalized for our maximum allowed angle and magnitude)
         """
 
+        self.lefts.append(left)
+        self.rights.append(right)
         # Get raw angles and normalize
         angle = max(left, right) - min(left, right)
         mag = left + right

@@ -68,20 +68,20 @@ mags = []
 muscles = ['MVU', 'MVL', 'MDL', 'MVR', 'MDR']
 
 muscleList = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15',
-              'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MVL07',
+              'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL07',
               'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16',
               'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23', 'MDR07', 'MDR08',
               'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17',
-              'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
+              'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR07', 'MVR08', 'MVR09',
               'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18',
               'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23']
 
 mLeft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16',
-         'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MVL07', 'MVL08', 'MVL09',
+         'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MVL07', 'MVL08', 'MVL09',
          'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16', 'MVL17', 'MVL18', 'MVL19',
          'MVL20', 'MVL21', 'MVL22', 'MVL23']
 mRight = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16',
-          'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
+          'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR07', 'MVR08', 'MVR09',
           'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19',
           'MVR20', 'MVR21', 'MVR22', 'MVR23']
 # Used to accumulate muscle weighted values in body muscles 07-23 = worm locomotion
@@ -675,6 +675,7 @@ def AS10():
     postSynaptic['MDR20'][nextState] += 2
 
 
+# todo: duplicate PDB?
 def AS11():
     postSynaptic['MDL21'][nextState] += 1
     postSynaptic['MDL22'][nextState] += 1
@@ -4307,7 +4308,6 @@ def VA12():
     postSynaptic['MVR21'][nextState] += 5
     postSynaptic['MVR22'][nextState] += 5
     postSynaptic['MVR23'][nextState] += 5
-    postSynaptic['MVR24'][nextState] += 5
     postSynaptic['PHCL'][nextState] += 1
     postSynaptic['PHCR'][nextState] += 1
     postSynaptic['PVCL'][nextState] += 2
@@ -4496,7 +4496,6 @@ def VB11():
     postSynaptic['MVR21'][nextState] += 5
     postSynaptic['MVR22'][nextState] += 5
     postSynaptic['MVR23'][nextState] += 5
-    postSynaptic['MVR24'][nextState] += 5
     postSynaptic['PVCR'][nextState] += 1
     postSynaptic['VA12'][nextState] += 2
 
@@ -4731,11 +4730,9 @@ def VD13():
     postSynaptic['MVL21'][nextState] += -9
     postSynaptic['MVL22'][nextState] += -9
     postSynaptic['MVL23'][nextState] += -9
-    postSynaptic['MVL23'][nextState] += -9
     postSynaptic['MVR21'][nextState] += -9
     postSynaptic['MVR22'][nextState] += -9
     postSynaptic['MVR23'][nextState] += -9
-    postSynaptic['MVR24'][nextState] += -9
     postSynaptic['PVCL'][nextState] += 1
     postSynaptic['PVCR'][nextState] += 1
     postSynaptic['PVPL'][nextState] += 2
@@ -4987,7 +4984,6 @@ def createpostSynaptic():
     postSynaptic['MVR21'] = [0, 0]
     postSynaptic['MVR22'] = [0, 0]
     postSynaptic['MVR23'] = [0, 0]
-    postSynaptic['MVR24'] = [0, 0]
     postSynaptic['MVULVA'] = [0, 0]
     postSynaptic['NSML'] = [0, 0]
     postSynaptic['NSMR'] = [0, 0]
@@ -5273,7 +5269,8 @@ def main():
     # turtle.home()
 
     start_time = time.time()
-    timestep_n = 5000000000000000000
+    #timestep_n = 5000000000000000000
+    timestep_n = 10000
     food_x = 100
     food_y = 0
     #while timestep < timestep_n if timestep_n > 0 else True:
@@ -5312,9 +5309,12 @@ def main():
 
     elapsed = time.time() - start_time
     print(f"TOTAL TIME: {round(elapsed,2)}s")
+    body.exit()
 
-    #plt.plot(np.arange(timestep_n), angles)
-    #plt.plot(np.arange(timestep_n), mags)
+    print(np.mean(body.lefts))
+    print(np.mean(body.rights))
+    #plt.scatter(np.arange(timestep_n), body.lefts)
+    #plt.scatter(np.arange(timestep_n), body.rights)
     #plt.show()
 
 
