@@ -20,14 +20,15 @@ turtle.Screen().setup(w, h)
 max_mag = 5  # So we move 1% of full map at most
 #max_angle = 36  # So we move 10% of a full rotation at most
 #max_angle = 360 # Since this empirically is very small
-max_angle = 720 # Since this empirically is very small
+#max_angle = 720 # Since this empirically is very small
+max_angle = 100 # Since this empirically is very small
 
 
 class Body(turtle.Turtle):
     def __init__(self, animate=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.speed(0)
-        self.ht()
+        #self.ht()
 
         # todo add support for this?
         self.animate = animate
@@ -35,7 +36,7 @@ class Body(turtle.Turtle):
         # Add cage display to the canvas
         self.canvas = turtle.getcanvas()
         self.cage = self.canvas.create_rectangle(-cw,ch,cw,-ch, width=3, outline="red")
-        turtle.tracer(1000, 0)
+        turtle.tracer(150, 0)
         # self.ht() # hide body
 
         self.speed = 1

@@ -72,29 +72,31 @@ muscleList = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MD
               'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16',
               'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23', 'MDR07', 'MDR08',
               'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17',
-              'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
+              'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
               'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18',
-              'MVR19', 'MVR20', 'MVL21', 'MVR22', 'MVR23']
+              'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23']
 
 mLeft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16',
          'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MVL07', 'MVL08', 'MVL09',
          'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16', 'MVL17', 'MVL18', 'MVL19',
          'MVL20', 'MVL21', 'MVL22', 'MVL23']
 mRight = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16',
-          'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
+          'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MVR07', 'MVR08', 'MVR09',
           'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19',
-          'MVR20', 'MVL21', 'MVR22', 'MVR23']
+          'MVR20', 'MVR21', 'MVR22', 'MVR23']
 # Used to accumulate muscle weighted values in body muscles 07-23 = worm locomotion
 
 # todo: Why are MDL21 and MVL21 in the right sections?
-musDleft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15',
-            'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23']
-musVleft = ['MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15',
-            'MVL16', 'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23']
-musDright = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15',
-             'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDL21', 'MDR22', 'MDR23'] # MDL???
-musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15',
-             'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVL21', 'MVR22', 'MVR23'] # MVL???
+# todo: holy shit this is a bug! They aren't supposed to be there!
+# also we don't use these lists
+# musDleft = ['MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15',
+#             'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23']
+# musVleft = ['MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15',
+#             'MVL16', 'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23']
+# musDright = ['MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15',
+#              'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23'] # MDL???
+# musVright = ['MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15',
+#              'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23'] # MVL???
 
 """This is the full C Elegans Connectome as expresed in the form of the Presynatptic
 neurite and the postSynaptic neurites.
@@ -2602,7 +2604,7 @@ def OLQVR():
     postSynaptic['SIBDR'][nextState] += 4
     postSynaptic['URBR'][nextState] += 1
 
-
+# todo: instance of MDL21
 def PDA():
     postSynaptic['AS11'][nextState] += 1
     postSynaptic['DA9'][nextState] += 1
@@ -2611,7 +2613,7 @@ def PDA():
     postSynaptic['PVNR'][nextState] += 1
     postSynaptic['VD13'][nextState] += 3
 
-
+# TODO: instance of MVR21
 def PDB():
     postSynaptic['AS11'][nextState] += 2
     postSynaptic['MVL22'][nextState] += 1
@@ -2620,6 +2622,7 @@ def PDB():
     postSynaptic['VD13'][nextState] += 2
 
 
+# todo: note: large neuron firings here
 def PDEL():
     postSynaptic['AVKL'][nextState] += 6
     postSynaptic['DVA'][nextState] += 24
@@ -3189,7 +3192,7 @@ def RICR():
     postSynaptic['SMDVL'][nextState] += 2
     postSynaptic['SMDVR'][nextState] += 1
 
-
+# todo: instance of MDL21
 def RID():
     postSynaptic['ALA'][nextState] += 1
     postSynaptic['AS2'][nextState] += 1
@@ -4728,6 +4731,7 @@ def VD13():
     postSynaptic['MVL21'][nextState] += -9
     postSynaptic['MVL22'][nextState] += -9
     postSynaptic['MVL23'][nextState] += -9
+    postSynaptic['MVL23'][nextState] += -9
     postSynaptic['MVR21'][nextState] += -9
     postSynaptic['MVR22'][nextState] += -9
     postSynaptic['MVR23'][nextState] += -9
@@ -5149,9 +5153,9 @@ def motorcontrol():
     # accumulate left and right muscles and the accumulated values are
     # used to move the left and right motors of the robot
 
-    for muscle in muscleList:  # if this doesn't work, do muscle in postSynaptic
+    for muscle in postSynaptic:  # if this doesn't work, do muscle in postSynaptic
         if muscle in mLeft:
-            accumleft += postSynaptic[muscle][nextState]  # vs thisState???
+            accumleft += postSynaptic[muscle][nextState]
 
             # print muscle, "Before", postSynaptic[muscle][thisState], accumleft
             # og version uses thisState to reset to 0
@@ -5160,7 +5164,7 @@ def motorcontrol():
             # print muscle, "After", postSynaptic[muscle][thisState], accumleft
 
         elif muscle in mRight:
-            accumright += postSynaptic[muscle][nextState]  # vs thisState???
+            accumright += postSynaptic[muscle][nextState]
 
             # postSynaptic[muscle][thisState] = 0
             postSynaptic[muscle][nextState] = 0
@@ -5270,18 +5274,19 @@ def main():
 
     start_time = time.time()
     timestep_n = 5000000000000000000
-    food_x = -100
-    food_y = -100
+    food_x = 100
+    food_y = 0
     #while timestep < timestep_n if timestep_n > 0 else True:
     for timestep in tqdm(range(timestep_n)):
         #print(f"TIMESTEP: {timestep}")
         if timestep % 10000 == 0:
-            body.clear()
+            #body.clear()
+            pass
 
         if timestep == 10000:
             # move the food
-            food_x = -100
-            food_y = -100
+            food_x = 100
+            food_y = 0
 
         # Check if it is bumping into the wall, and if so, trigger nose touch
         if body.nose_touching():
