@@ -26,10 +26,10 @@ max_mag = 5
 max_angle = 512
 #max_angle = 720 # Since this empirically is very small
 
-wall_buffer = 5
+wall_buffer = 20
 
 # Set to 360 to disable heading checking entirely
-#heading_buffer = 90
+#heading_buffer = 45
 heading_buffer = 360
 
 

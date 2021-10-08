@@ -5239,14 +5239,22 @@ tfood = 0
 def trigger_food_sensors():
     dendriteAccumulate("ADFL")
     dendriteAccumulate("ADFR")
-    dendriteAccumulate("ASGR")
+
     dendriteAccumulate("ASGL")
+    dendriteAccumulate("ASGR")
     dendriteAccumulate("ASIL")
     dendriteAccumulate("ASIR")
-    dendriteAccumulate("ASJR")
+
     dendriteAccumulate("ASJL")
+    dendriteAccumulate("ASJR")
+
+    #dendriteAccumulate("AWCL")
+    #dendriteAccumulate("AWCR")
+    #dendriteAccumulate("AWAL")
+    #dendriteAccumulate("AWAR")
 
 def trigger_nose_touch_sensors():
+
     dendriteAccumulate("FLPR")
     dendriteAccumulate("FLPL")
     dendriteAccumulate("ASHL")
@@ -5257,7 +5265,19 @@ def trigger_nose_touch_sensors():
     dendriteAccumulate("OLQDR")
     dendriteAccumulate("OLQVR")
     dendriteAccumulate("OLQVL")
+    # dendriteAccumulate("FLPL")
+    # dendriteAccumulate("FLPR")
+    # dendriteAccumulate("BDUL")
+    # dendriteAccumulate("BDUR")
+    # dendriteAccumulate("SDQR")
 
+def trigger_anterior_harsh_touch_sensors():
+    #untested, unused
+    dendriteAccumulate("FLPL")
+    dendriteAccumulate("FLPR")
+    dendriteAccumulate("BDUL")
+    dendriteAccumulate("BDUR")
+    dendriteAccumulate("SDQR")
 
 def main():
     """Here is where you would put in a method to stimulate the neurons
@@ -5296,7 +5316,8 @@ def main():
         else:
             # Otherwise do nothing, unless we encounter food
             # todo we need to handle case where its on the wall and there's food
-            if timestep < 15 or body.distance(food_x,food_y) < food_r:
+            #if timestep < 15 or body.distance(food_x,food_y) < food_r:
+            if timestep < 15:
                 body.cagecolor("red")
                 body.pencolor("red")
                 trigger_food_sensors()
