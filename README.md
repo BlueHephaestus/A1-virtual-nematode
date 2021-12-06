@@ -14,4 +14,6 @@ all of them are modular parts that can be combined in different ways.
 
 So A2 is starting to implement CTRNN derivations for selfmod, and that's where i'm leaving this repo for now.
 
+EDIT: Actually I don't feel I understand exactly why CTRNNs would be better than normal RNNs (I just understood that continous-time was different than I thought), and normal discrete time RNNs are what I have been designing and using so far, so i'm going to continue with normal RNNs. (also that's what the connectomes use)
+
 On to Model A-2!

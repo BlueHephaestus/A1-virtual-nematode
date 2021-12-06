@@ -1,7 +1,3 @@
-"""
-My own implementation based on this, to be customised to load in existing structures
-"""
-
 """Handles the continuous-time recurrent neural network implementation."""
 from __future__ import division
 

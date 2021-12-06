@@ -7,6 +7,7 @@ good base encompassing example of python-neat applications,
 
 from __future__ import print_function
 
+import ctrnn_derivations
 import multiprocessing
 import os
 import pickle
@@ -23,7 +24,9 @@ time_const = cart_pole.CartPole.time_step
 
 # Use the CTRNN network phenotype and the discrete actuator force function.
 def eval_genome(genome, config):
-    net = neat.ctrnn.CTRNN.create(genome, config, time_const)
+    #net = neat.ctrnn.CTRNN.create(genome, config, time_const)
+    net = ctrnn_derivations.CTRNN.create(genome, config, time_const)
+
 
     fitnesses = []
     for runs in range(runs_per_net):
