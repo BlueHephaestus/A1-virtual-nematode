@@ -23,6 +23,26 @@ We also want this to be an easily mutateable structure, in lots of ways.
 
 So it needs to be a data structure to represent a weighted graph.
 
+We should make it easy to reference the source node, and get the dest + values to prop.
+
+so maybe this?
+
+neurons[source] = [(dest, weight), (dest, weight), (dest, weight)....]
+
+so if I do fire(source):
+    then for dest in curr[source]
+        next[dest] += weight
+
+    yep that's pog as fuck
+
+# initialize to whatever
+while true
+    next = curr (same init values)
+    for node in curr:
+        if node triggered
+            # fire node
+            for dest in curr[node]
+                next[dest] += weight
 
 
 """

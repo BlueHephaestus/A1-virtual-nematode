@@ -676,4 +676,11 @@ But I see no reason why we couldn't just have NEAT be endless mode, plus that'd 
 
 SO YEA PYTHON-NEAT WOO
 
+
+but hello
+it's me
+the even more future self
+so we need to keep updating neuron structure
+    yep
+
 """
