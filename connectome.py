@@ -34,7 +34,8 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
-from neurons import *
+#from neurons import *
+from collections import defaultdict
 
 class Nematode:
 
@@ -47,11 +48,29 @@ class Nematode:
         self.thisState = 0
         self.nextState = 1
 
-        # The Threshold is the maximum sccumulated value that must be exceeded before
-        # the Neurite will fire
+        # Load the initial values for the connectome and initialize curr, next
+        self.neurons = ['ADAL', 'ADAR', 'ADEL', 'ADER', 'ADFL', 'ADFR', 'ADLL', 'ADLR', 'AFDL', 'AFDR', 'AIAL', 'AIAR', 'AIBL', 'AIBR', 'AIML', 'AIMR', 'AINL', 'AINR', 'AIYL', 'AIYR', 'AIZL', 'AIZR', 'ALA', 'ALML', 'ALMR', 'ALNL', 'ALNR', 'AQR', 'AS1', 'AS10', 'AS11', 'AS2', 'AS3', 'AS4', 'AS5', 'AS6', 'AS7', 'AS8', 'AS9', 'ASEL', 'ASER', 'ASGL', 'ASGR', 'ASHL', 'ASHR', 'ASIL', 'ASIR', 'ASJL', 'ASJR', 'ASKL', 'ASKR', 'AUAL', 'AUAR', 'AVAL', 'AVAR', 'AVBL', 'AVBR', 'AVDL', 'AVDR', 'AVEL', 'AVER', 'AVFL', 'AVFR', 'AVG', 'AVHL', 'AVHR', 'AVJL', 'AVJR', 'AVKL', 'AVKR', 'AVL', 'AVM', 'AWAL', 'AWAR', 'AWBL', 'AWBR', 'AWCL', 'AWCR', 'BAGL', 'BAGR', 'BDUL', 'BDUR', 'CEPDL', 'CEPDR', 'CEPVL', 'CEPVR', 'DA1', 'DA2', 'DA3', 'DA4', 'DA5', 'DA6', 'DA7', 'DA8', 'DA9', 'DB1', 'DB2', 'DB3', 'DB4', 'DB5', 'DB6', 'DB7', 'DD1', 'DD2', 'DD3', 'DD4', 'DD5', 'DD6', 'DVA', 'DVB', 'DVC', 'FLPL', 'FLPR', 'HSNL', 'HSNR', 'I1L', 'I1R', 'I2L', 'I2R', 'I3', 'I4', 'I5', 'I6', 'IL1DL', 'IL1DR', 'IL1L', 'IL1R', 'IL1VL', 'IL1VR', 'IL2L', 'IL2R', 'IL2DL', 'IL2DR', 'IL2VL', 'IL2VR', 'LUAL', 'LUAR', 'M1', 'M2L', 'M2R', 'M3L', 'M3R', 'M4', 'M5', 'MANAL', 'MCL', 'MCR', 'MDL01', 'MDL02', 'MDL03', 'MDL04', 'MDL05', 'MDL06', 'MDL07', 'MDL08', 'MDL09', 'MDL10', 'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20', 'MDL21', 'MDL22', 'MDL23', 'MDL24', 'MDR01', 'MDR02', 'MDR03', 'MDR04', 'MDR05', 'MDR06', 'MDR07', 'MDR08', 'MDR09', 'MDR10', 'MDR11', 'MDR12', 'MDR13', 'MDR14', 'MDR15', 'MDR16', 'MDR17', 'MDR18', 'MDR19', 'MDR20', 'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MI', 'MVL01', 'MVL02', 'MVL03', 'MVL04', 'MVL05', 'MVL06', 'MVL07', 'MVL08', 'MVL09', 'MVL10', 'MVL11', 'MVL12', 'MVL13', 'MVL14', 'MVL15', 'MVL16', 'MVL17', 'MVL18', 'MVL19', 'MVL20', 'MVL21', 'MVL22', 'MVL23', 'MVR01', 'MVR02', 'MVR03', 'MVR04', 'MVR05', 'MVR06', 'MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16', 'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23', 'MVULVA', 'NSML', 'NSMR', 'OLLL', 'OLLR', 'OLQDL', 'OLQDR', 'OLQVL', 'OLQVR', 'PDA', 'PDB', 'PDEL', 'PDER', 'PHAL', 'PHAR', 'PHBL', 'PHBR', 'PHCL', 'PHCR', 'PLML', 'PLMR', 'PLNL', 'PLNR', 'PQR', 'PVCL', 'PVCR', 'PVDL', 'PVDR', 'PVM', 'PVNL', 'PVNR', 'PVPL', 'PVPR', 'PVQL', 'PVQR', 'PVR', 'PVT', 'PVWL', 'PVWR', 'RIAL', 'RIAR', 'RIBL', 'RIBR', 'RICL', 'RICR', 'RID', 'RIFL', 'RIFR', 'RIGL', 'RIGR', 'RIH', 'RIML', 'RIMR', 'RIPL', 'RIPR', 'RIR', 'RIS', 'RIVL', 'RIVR', 'RMDDL', 'RMDDR', 'RMDL', 'RMDR', 'RMDVL', 'RMDVR', 'RMED', 'RMEL', 'RMER', 'RMEV', 'RMFL', 'RMFR', 'RMGL', 'RMGR', 'RMHL', 'RMHR', 'SAADL', 'SAADR', 'SAAVL', 'SAAVR', 'SABD', 'SABVL', 'SABVR', 'SDQL', 'SDQR', 'SIADL', 'SIADR', 'SIAVL', 'SIAVR', 'SIBDL', 'SIBDR', 'SIBVL', 'SIBVR', 'SMBDL', 'SMBDR', 'SMBVL', 'SMBVR', 'SMDDL', 'SMDDR', 'SMDVL', 'SMDVR', 'URADL', 'URADR', 'URAVL', 'URAVR', 'URBL', 'URBR', 'URXL', 'URXR', 'URYDL', 'URYDR', 'URYVL', 'URYVR', 'VA1', 'VA10', 'VA11', 'VA12', 'VA2', 'VA3', 'VA4', 'VA5', 'VA6', 'VA7', 'VA8', 'VA9', 'VB1', 'VB10', 'VB11', 'VB2', 'VB3', 'VB4', 'VB5', 'VB6', 'VB7', 'VB8', 'VB9', 'VC1', 'VC2', 'VC3', 'VC4', 'VC5', 'VC6', 'VD1', 'VD10', 'VD11', 'VD12', 'VD13', 'VD2', 'VD3', 'VD4', 'VD5', 'VD6', 'VD7', 'VD8', 'VD9']
+        self.conn = defaultdict(lambda: []) # connectome
+        self.curr = {}
+        self.next = {}
+
+        # Get connections and weights
+        with open("neurons.txt", "r") as f:
+            for line in f:
+                connection = line.strip()
+                src,dst,w = connection.split(" ")
+                self.conn[src].append((dst,int(w)))
+
+        # Populate curr and next with zeroes for each neuron
+        for neuron in self.neurons:
+            self.curr[neuron] = 0
+            self.next[neuron] = 0
+
+        # The threshold is the maximum sccumulated value that must be exceeded before the Neurite will fire
         self.threshold = 30
 
         self.time_delays = False
+
         # Accumulators are used to decide the value to send to the Left and Right motors
         # of the GoPiGo robot
         self.accumleft = 0
@@ -59,6 +78,7 @@ class Nematode:
 
         # Used to remove from Axon firing since muscles cannot fire.
         self.muscles = ['MVU', 'MVL', 'MDL', 'MVR', 'MDR']
+
 
         self.mLeft =  ['MDL01', 'MDL02', 'MDL03', 'MDL04', 'MDL05', 'MDL06', 'MDL07', 'MDL08', 'MDL09', 'MDL10',
                   'MDL11', 'MDL12', 'MDL13', 'MDL14', 'MDL15', 'MDL16', 'MDL17', 'MDL18', 'MDL19', 'MDL20',
@@ -71,6 +91,9 @@ class Nematode:
                   'MDR21', 'MDR22', 'MDR23', 'MDR24', 'MVR01', 'MVR02', 'MVR03', 'MVR04', 'MVR05', 'MVR06',
                   'MVR07', 'MVR08', 'MVR09', 'MVR10', 'MVR11', 'MVR12', 'MVR13', 'MVR14', 'MVR15', 'MVR16',
                   'MVR17', 'MVR18', 'MVR19', 'MVR20', 'MVR21', 'MVR22', 'MVR23']
+        for m in self.mLeft + self.mRight + ["MVULVA"]:
+            self.curr[m] = 0
+            self.next[m] = 0
         # Used to accumulate muscle weighted values in body muscles 07-23 = worm locomotion
 
 
@@ -82,10 +105,6 @@ class Nematode:
         """
         # Create the dictionary
         self.create_post_synaptic()
-
-
-
-
 
     def create_post_synaptic(self):
         # The post_synaptic dictionary maintains the accumulated values for
@@ -489,7 +508,7 @@ class Nematode:
 
 
     # todo make class for brain with these as class variables
-    def motorcontrol(self, ):
+    def motorcontrol_old(self, ):
         #global body
 
         # accumulate left and right muscles and the accumulated values are
@@ -515,6 +534,40 @@ class Nematode:
         accumleft = 0
         accumright = 0
 
+    def motorcontrol(self):
+        """
+        Accumulate the current values of left-body muscles and the current values of right-body muscles,
+            to apply to our body movement.
+
+        Reset the values after.
+        """
+        # TODO WHY ON EARTH IS THIS CODE PRODUCING DIFFERENT ACCUMLEFT VALUES AT TIMESTEP 99 AS OPPOSED
+        # TO THE COMMENTED CODE RIGHT BELOW IT???
+        for neuron in self.neurons:
+            if neuron in self.mLeft:
+                if self.timestep == 997:
+                    print(self.accumleft, self.next[neuron], neuron)
+                self.accumleft += self.next[neuron]
+                self.next[neuron] = 0
+
+            elif neuron in self.mRight:
+                self.accumright += self.next[neuron]
+                self.next[neuron] = 0
+        # for muscle in self.mLeft:
+        #     self.accumleft += self.next[muscle]
+        #     self.next[muscle] = 0
+        #
+        # for muscle in self.mRight:
+        #     self.accumright += self.next[muscle]
+        #     self.next[muscle] = 0
+
+        # Apply and move body???
+        print(self.accumleft, self.accumright)
+        angle, mag = body.move(self.accumleft, self.accumright)
+        self.accumleft = 0
+        self.accumright = 0
+
+
 
     def dendrite_accumulate(self, dneuron):
         f = eval(dneuron)
@@ -532,6 +585,23 @@ class Nematode:
             # post_synaptic[fneuron][thisState] = 0
             self.post_synaptic[fneuron][nextState] = 0
 
+    # Still not sure why these two are separate.
+    def accumulate(self, dendrite):
+        # Fire neuron only, don't set value to 0
+        for dst,w in self.conn[dendrite]:
+            self.next[dst] += w
+
+    def fire(self, neuron):
+        if neuron == "MVULVA": return
+        # Fire neuron, and set it's next value to 0 since it's post-fire.
+
+        for dst,w in self.conn[neuron]:
+            if self.timestep == 997 and dst == "MDL21":
+                print(neuron, dst, w)
+            self.next[dst] += w
+
+        # TODO set them to zero after the propagation?
+        self.next[neuron] = 0
 
     def runconnectome(self):
         """Each time a set of neuron is stimulated, this method will execute
@@ -568,51 +638,104 @@ class Nematode:
 
         thisState, nextState = nextState, thisState
 
+    def propagate_connectome(self):
+        """
+        Step one timestep forward in our connectome. For all neurons in the connectome,
+            for any that have values exceeding the threshold, they are fired and their signal is propagated
+            to the neurons they are connected to, via adding to the dest. neurons value.
+
+        When the next timestep comes, those values will be compared to the threshold as well, and so on.
+
+        We will update curr to be next by the end of this function.
+        """
+        for neuron in self.neurons:
+            if self.timestep == 997 and neuron == "MDL21":
+                print(self.curr[neuron])
+            # for neuron, signal in self.curr.items():
+            #     # If not a muscle, and signal above threshold
+            #     # TODO WHY IS ABS HERE??? - oh, because it's just magnitude
+            #     if neuron[:3] not in self.muscles and abs(signal) > self.threshold:
+            #         self.fire(neuron)
+            if neuron[:3] not in self.muscles and abs(self.curr[neuron]) > self.threshold:
+                if self.timestep == 997 and neuron == "RID":
+                    print(neuron, self.curr[neuron])
+                self.fire(neuron)
+
+        self.motorcontrol()
+
+        # Update curr to now be next since propagation is complete.
+        #self.curr = self.next
+        for neuron,signal in self.next.items():
+            self.curr[neuron] = signal
+
+
 
     def trigger_food_sensors(self):
-        self.dendrite_accumulate("ADFL")
-        self.dendrite_accumulate("ADFR")
-
-        self.dendrite_accumulate("ASGL")
-        self.dendrite_accumulate("ASGR")
-        self.dendrite_accumulate("ASIL")
-        self.dendrite_accumulate("ASIR")
-
-        self.dendrite_accumulate("ASJL")
-        self.dendrite_accumulate("ASJR")
+        # TESTING, WIP
+        # self.accumulate("ADFL")
+        # self.accumulate("ADFR")
+        #
+        # self.accumulate("ASGL")
+        # self.accumulate("ASGR")
+        # self.accumulate("ASIL")
+        # self.accumulate("ASIR")
+        #
+        # self.accumulate("ASJL")
+        # self.accumulate("ASJR")
+        #
+        self.accumulate("AWCL")
+        self.accumulate("AWCR")
+        self.accumulate("AWAL")
+        self.accumulate("AWAR")
 
     def trigger_nose_touch_sensors(self):
 
-        self.dendrite_accumulate("FLPR")
-        self.dendrite_accumulate("FLPL")
-        self.dendrite_accumulate("ASHL")
-        self.dendrite_accumulate("ASHR")
-        self.dendrite_accumulate("IL1VL")
-        self.dendrite_accumulate("IL1VR")
-        self.dendrite_accumulate("OLQDL")
-        self.dendrite_accumulate("OLQDR")
-        self.dendrite_accumulate("OLQVR")
-        self.dendrite_accumulate("OLQVL")
+        # self.accumulate("FLPR")
+        # self.accumulate("FLPL")
+        # self.accumulate("ASHL")
+        # self.accumulate("ASHR")
+        # self.accumulate("IL1VL")
+        # self.accumulate("IL1VR")
+        # self.accumulate("OLQDL")
+        # self.accumulate("OLQDR")
+        # self.accumulate("OLQVR")
+        # self.accumulate("OLQVL")
 
+        self.accumulate("FLPL")
+        self.accumulate("FLPR")
+        self.accumulate("BDUL")
+        self.accumulate("BDUR")
+        self.accumulate("SDQL")
+        self.accumulate("SDQR")
     def trigger_anterior_harsh_touch_sensors(self):
         #untested, unused
-        self.dendrite_accumulate("FLPL")
-        self.dendrite_accumulate("FLPR")
-        self.dendrite_accumulate("BDUL")
-        self.dendrite_accumulate("BDUR")
-        self.dendrite_accumulate("SDQR")
+        self.accumulate("FLPL")
+        self.accumulate("FLPR")
+        self.accumulate("BDUL")
+        self.accumulate("BDUR")
+        self.accumulate("SDQR")
 
     def main(self):
         timestep_n = 5000000000000000000
         #timestep_n = 100000
-        food_x = 200
+        food_x = 750
         food_y = 0
-        food_r = 50
+        food_r = 200
         #while timestep < timestep_n if timestep_n > 0 else True:
-        for timestep in tqdm(range(timestep_n)):
+        self.timestep = 0
+        for self.timestep in tqdm(range(timestep_n)):
             #print(f"TIMESTEP: {timestep}")
-            #if timestep % 6000 == 0:
-            #body.clear()
+            if self.timestep % 6000 == 0:
+                body.clear()
+
+            if self.timestep <= 100:
+                #print(self.curr["VD10"], self.next["VD10"], self.curr["VD9"], self.next["VD9"])
+                pass
+            if self.timestep == 998:
+                with open("/home/blue/temp-next.txt", "w") as f:
+                    for key, value in sorted(self.curr.items()):
+                        f.write(f"{key}:{value}\n")
+                return
             #turtle.update()
 
 
@@ -621,23 +744,26 @@ class Nematode:
                 body.cagecolor("black")
                 body.pencolor("black")
                 self.trigger_nose_touch_sensors()
-                self.runconnectome()
+                #self.runconnectome()
+                self.propagate_connectome()
             else:
                 # Otherwise do nothing, unless we encounter food
                 # todo we need to handle case where its on the wall and there's food
-                #if timestep < 15 or body.distance(food_x,food_y) < food_r:
-                if timestep < 15:
+                #if self.timestep < 15 or body.distance(food_x,food_y) < food_r:
+                if self.timestep < 15:
                     body.cagecolor("red")
                     body.pencolor("red")
                     self.trigger_food_sensors()
-                    self.runconnectome()
-                    if self.time_delays:
-                        time.sleep(0.5)
+                    self.propagate_connectome()
+                    #self.runconnectome()
                 else:
                     body.cagecolor("blue")
                     body.pencolor("blue")
                     # no food sensors, but still run the brain
-                    self.runconnectome()
+                    #self.runconnectome()
+                    self.propagate_connectome()
+            if self.time_delays:
+                time.sleep(0.1)
 
         body.exit()
 
@@ -683,4 +809,52 @@ the even more future self
 so we need to keep updating neuron structure
     yep
 
+for a neuron
+
+e.g.
+ADAL = ['ADAR', 'ADFL', ...] with values [2, 1, ...]
+    it's a directed outgoing graph node for each neuron
+aka an adjacency list, not adjacency matrix
+Also we have two graphs, of the same brain. First one is the current timestep, and
+we formulate the next one to replace that via the neurons propagating one timestep forward
+
+So we really just need one that'll represent the brain at a given timestep,
+and then we can easily just use `curr` to update `next`.
+
+We also want this to be an easily mutateable structure, in lots of ways.
+So that we can run genetic algos on it, and add,remove, and edit anything.
+edit the connection weight, remove connection, add connection,
+or even create or remove entire neurons
+
+So it needs to be a data structure to represent a weighted graph.
+
+We should make it easy to reference the source node, and get the dest + values to prop.
+
+so maybe this?
+
+neurons[source] = [(dest, weight), (dest, weight), (dest, weight)....]
+
+so if I do fire(source):
+then for dest in curr[source]
+    next[dest] += weight
+
+yep that's pog as fuck
+
+# initialize to whatever
+while true
+    next = curr (same init values)
+    for node in curr:
+        if node triggered
+        # fire node
+        for dest in curr[node]
+            next[dest] += weight
+
+so every 14 timesteps, the accumleft ends up with 5 more values than it should.
+what the fuck
+
+at timestep 997, MDL14 has value -3 and it should have value -1, MDL21 has -3 and should have 0
+
+GOD FUCKING DAMMIT WE FORGOT TO ACCOUNT FOR COMMENTS IN NEURONS.PY BECAUSE OF THE EARLIER BRAIN DAMAGE
+
+alright it works now, i'm going to bed holy shit
 """

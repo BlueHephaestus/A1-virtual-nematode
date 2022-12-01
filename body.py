@@ -4,8 +4,8 @@ turtle.speed(0)
 turtle.delay(0)
 turtle.ht()
 
-w = 1000
-h = 1000
+w = 3000
+h = 3000
 
 # Size of cage
 vw = w // 2
